@@ -3,6 +3,8 @@ package com.aluminium.flowchart.utils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
+
 public class ItemorfluidStack {
 
     public ItemStack item;
