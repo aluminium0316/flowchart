@@ -20,4 +20,10 @@ public class ItemorfluidStack {
         this.fluid = item;
         this.isInput = isInput;
     }
+
+    public ItemorfluidStack(ItemorfluidStack item, boolean isInput) {
+        this.item = item.item;
+        this.fluid = item.fluid;
+        this.isInput = isInput;
+    }
 }

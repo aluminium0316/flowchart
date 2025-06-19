@@ -5,6 +5,8 @@ public class Arrow {
     public ItemorfluidStack[] out;
     public Node input;
     public Node output;
+    public int inputSub;
+    public int outputSub;
 
     public Arrow(Node input, Node output) {
         this.input = input;

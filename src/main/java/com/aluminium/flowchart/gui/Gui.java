@@ -60,6 +60,7 @@ public class Gui extends CustomModularScreen {
     private static ArrayList<Node> nodes;
     private static ArrayList<Arrow> arrows;
     public static Tools tool;
+    public static RichTooltip log;
 
     public static void open() {
         UISettings settings = new UISettings();
@@ -71,6 +72,9 @@ public class Gui extends CustomModularScreen {
 
     @Override
     public ModularPanel buildUI(ModularGuiContext context) {
+        if (log == null) {
+            log = new RichTooltip();
+        }
         if (ingredients == null) {
             ingredients = new Ingredients[256];
             Arrays.fill(ingredients, new Ingredients());
@@ -95,7 +99,7 @@ public class Gui extends CustomModularScreen {
         IWidget center = new Widget<>()
                 .pos(0, 0);
 
-        EditorWidget node = new EditorWidget() {
+        EditorWidget node = new EditorWidget(nodes, arrows) {
             @Override
             public void afterInit() {
                 super.afterInit();
@@ -127,7 +131,7 @@ public class Gui extends CustomModularScreen {
         tool.line = line;
         tool.node = node;
 
-        renderNodes(node, line);
+        renderNodes(node);
         renderArrows(node);
 
         node.child(center);
@@ -165,8 +169,7 @@ public class Gui extends CustomModularScreen {
                     public Result onMousePressed(int mouseButton) {
                         Interactable.playButtonClickSound();
                         nodes.add(uningredient(ingredient));
-                        node.getChildren().removeIf(child -> child instanceof NodeWidget);
-                        renderNodes(node, line);
+                        renderNodes(node);
                         WidgetTree.resize(node);
                         return Result.SUCCESS;
                     }
@@ -189,8 +192,7 @@ public class Gui extends CustomModularScreen {
                     public Result onMousePressed(int mouseButton) {
                         Interactable.playButtonClickSound();
                         nodes.add(uningredient(ingredient));
-                        node.getChildren().removeIf(child -> child instanceof NodeWidget);
-                        renderNodes(node, line);
+                        renderNodes(node);
                         WidgetTree.resize(node);
                         return Result.SUCCESS;
                     }
@@ -235,31 +237,29 @@ public class Gui extends CustomModularScreen {
         panel.child(IKey.str("Flowchart, a: " + recipes).asWidget()
                         .top(7).left(7))
                 .child(w1)
-                .child(node)
+                .child(node.tooltip(log))
                 .child(tools);
 
         return panel;
     }
 
-    private void renderNodes(ScrollWidget<?> nodeWidget, Line line) {
+    public static void renderNodes(ScrollWidget<?> nodeWidget) {
+        nodeWidget.getChildren().removeIf(child -> child instanceof NodeWidget);
         for (Node node : nodes) {
-            NodeWidget widget = new NodeWidget(new VerticalScrollData(), i -> {
+            NodeWidget widget = new NodeWidget(i -> {
                 tool.select(node, arrows, i.i);
                 renderArrows(nodeWidget);
                 WidgetTree.resize(nodeWidget);
 //                Flowchart.LOGGER.info(ReflectionToStringBuilder.toString(line));
-                }, node)
-                    .pos(node.x, node.y)
-                    .size(24, 24)
-                    .background(GuiTextures.DISPLAY_SMALL)
-                    .keepScrollBarInArea();
+                }, node);
             node.widget = widget;
 
             nodeWidget.child(widget);
         }
     }
 
-    private void renderArrows(ScrollWidget<?> nodeWidget) {
+    public static void renderArrows(ScrollWidget<?> nodeWidget) {
+        nodeWidget.getChildren().removeIf(child -> child instanceof ArrowWidget);
         for (Arrow arrow : arrows) {
             ArrowWidget widget = new ArrowWidget(arrow)
                     .pos(0, 0)

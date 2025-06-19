@@ -17,6 +17,8 @@ public class Node implements MoveTool.IPosition {
     public int y;
     public NodeWidget widget;
 
+    public int type;
+
     public Node(List<List<ItemStack>> inputItems, List<List<FluidStack>> inputFluids, List<List<ItemStack>> outputItems, List<List<FluidStack>> outputFluids) {
         this.input = new ItemorfluidStack[inputItems.size() + inputFluids.size()][];
         this.output = new ItemorfluidStack[outputItems.size() + outputFluids.size()][];
@@ -37,21 +39,22 @@ public class Node implements MoveTool.IPosition {
         for (int i = 0; i < outputItems.size(); i++) {
             this.output[i] = new ItemorfluidStack[outputItems.get(i).size()];
             for (int j = 0; j < outputItems.get(i).size(); j++) {
-                this.output[i][j] = new ItemorfluidStack(outputItems.get(i).get(j), true);
+                this.output[i][j] = new ItemorfluidStack(outputItems.get(i).get(j), false);
             }
         }
         for (int i = 0; i < outputFluids.size(); i++) {
             int i2 = outputItems.size();
             this.output[i + i2] = new ItemorfluidStack[outputFluids.get(i).size()];
             for (int j = 0; j < outputFluids.get(i).size(); j++) {
-                this.output[i + i2][j] = new ItemorfluidStack(outputFluids.get(i).get(j), true);
+                this.output[i + i2][j] = new ItemorfluidStack(outputFluids.get(i).get(j), false);
             }
         }
 
-        index = new Arrow[this.input.length + 1 + this.output.length];
+        this.index = new Arrow[this.input.length + 1 + this.output.length];
 
         this.x = 24;
         this.y = 24;
+        this.type = 0;
     }
 
 //    public Node(ItemorfluidStack[] input, ItemorfluidStack[] output) {
@@ -65,7 +68,22 @@ public class Node implements MoveTool.IPosition {
 //    }
 
     public Node(ItemorfluidStack input, int[] inputRatio, int[] outputRatio) {
+        this.index = new Arrow[this.input.length + 1 + this.output.length];
 
+        this.x = 24;
+        this.y = 24;
+        this.type = 2;
+    }
+
+    public Node(ItemorfluidStack input) {
+        this.input = new ItemorfluidStack[][] { { new ItemorfluidStack(input, true) } };
+        this.output = new ItemorfluidStack[][] { { new ItemorfluidStack(input, false) } };
+
+        this.index = new Arrow[this.input.length + 1 + this.output.length];
+
+        this.x = 24;
+        this.y = 24;
+        this.type = 1;
     }
 
     public ItemorfluidStack[] getArrowIndex(int i) {

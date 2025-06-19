@@ -2,6 +2,7 @@ package com.aluminium.flowchart.gui;
 
 import com.aluminium.flowchart.utils.ItemorfluidStack;
 import com.aluminium.flowchart.utils.Node;
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.value.sync.FluidSlotSyncHandler;
 import com.cleanroommc.modularui.widget.ScrollWidget;
@@ -29,14 +30,18 @@ public class NodeWidget extends ScrollWidget<NodeWidget> {
         }
     }
 
-    private NodeWidget(VerticalScrollData data, Consumer<Int> c) {
-        super(data);
+    private NodeWidget(Consumer<Int> c) {
+        super();
         this.getScrollArea().setScrollData(new HorizontalScrollData(false, 1));
+        this.getScrollArea().setScrollData(new VerticalScrollData(false, 4));
         this.c = c;
+        this.size(24, 24);
+        this.background(GuiTextures.DISPLAY_SMALL);
+        this.keepScrollBarInArea();
     }
 
-    public NodeWidget(VerticalScrollData data, Consumer<Int> c, Node node) {
-        this(data, c);
+    public NodeWidget(Consumer<Int> c, Node node) {
+        this(c);
         this.node = node;
         this.node();
         this.pos(this.node.x, this.node.y);

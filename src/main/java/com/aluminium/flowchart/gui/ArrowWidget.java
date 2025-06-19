@@ -52,32 +52,26 @@ public class ArrowWidget extends ParentWidget<ArrowWidget> {
         super.onUpdate();
     }
 
-    @Override
-    public boolean isBelowMouse() {
-        if (!super.isBelowMouse()) return false;
-        int x = this.getContext().getMouseX() + this.getArea().x;
-        int y = this.getContext().getMouseY() + this.getArea().y;
-
-        int x1 = this.arrow.input.x;
-        int y1 = this.arrow.input.y;
-
-        int x2 = this.arrow.output.x;
-        int y2 = this.arrow.output.y;
-
-        double len = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
-        double distance = Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - x1 * y2) / len;
-        double a = ((y2 - y1) * (y - y1) - (x2 - x1) * (x - x1));
-
-        Flowchart.LOGGER.info(distance + "\t" + a + "\t" + len);
-
-        return distance < 2.0 && 0.0 < a && a < len;
-    }
+//        int x = this.getContext().getMouseX() + this.getArea().x;
+//        int y = this.getContext().getMouseY() + this.getArea().y;
+//
+//        int x1 = this.arrow.input.x;
+//        int y1 = this.arrow.input.y;
+//
+//        int x2 = this.arrow.output.x;
+//        int y2 = this.arrow.output.y;
+//
+//        double len = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+//        double distance = Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - x1 * y2) / len;
+//        double a = ((y2 - y1) * (y - y1) - (x2 - x1) * (x - x1));
+//
+//        return distance < 2.0 && 0.0 < a && a < len;
 
     @Override
     public Area getArea() {
         Area area = super.getArea();
-        area.x(Integer.min(arrow.input.x, arrow.output.x));
-        area.y(Integer.min(arrow.input.y, arrow.output.y));
+        area.x(Integer.min(arrow.input.x, arrow.output.x) + 12);
+        area.y(Integer.min(arrow.input.y, arrow.output.y) + 12);
         area.w(Math.abs(arrow.input.x - arrow.output.x));
         area.h(Math.abs(arrow.input.y - arrow.output.y));
         this.pos(area.x, area.y);
